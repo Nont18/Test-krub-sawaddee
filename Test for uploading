@@ -28,13 +28,14 @@ namespace gazebo
       world_frame = model->WorldAngularVel(); //WorldAngularVel();
       phi_dot = (-1)*world_frame.Z();
       this->torque = damping_coef*phi_dot*abs(phi_dot);
-      this->model->AddRelativeTorque(ignition::math::Vector3d(0,0,torque));	
+      this->link->AddRelativeTorque(ignition::math::Vector3d(0,0,torque));	//model
 
     }
 
     // Pointer to the model
     private:
     	physics::ModelPtr model;
+    	physics::linkPtr link;
 	double damping_coef;
 	double world_frame;
 	double phi_dot;
