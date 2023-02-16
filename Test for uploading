@@ -3,10 +3,10 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <ignition/math/Vector3.hh>
-
+#include <gazebo/transport/transport.hh>
 namespace gazebo
 {
-  class YawDampingTorquePlugin : public ModelPlugin
+  class YawDampingTorquePlugin : public ModelPlugin //This plugin named YawDampingTorquePlugin
   {
     public: void Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     {
@@ -25,10 +25,10 @@ namespace gazebo
     public: void OnUpdate()
     {
       // Apply a small linear velocity to the model.
-      world_frame = model->WorldAngularVel(); //WorldAngularVel();
-      phi_dot = (-1)*world_frame.Z();
-      this->torque = damping_coef*phi_dot*abs(phi_dot);
-      this->link->AddRelativeTorque(ignition::math::Vector3d(0,0,torque));	//model
+      world_frame = model->WorldAngularVel(); //WorldAngularVel() is function.
+      phi_dot = (-1)*world_frame.Z(); //get the member of z in world_frame matrix.
+      this->torque = damping_coef*phi_dot*abs(phi_dot); //calculate torque
+      this->link->AddRelativeTorque(ignition::math::Vector3d(0,0,torque)); //change model to link
 
     }
 
