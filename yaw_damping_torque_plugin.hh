@@ -1,4 +1,4 @@
-include <gazebo/common/common.hh>
+#include <gazebo/common/common.hh>
 #include <gazebo/common/Event.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/physics.hh>
