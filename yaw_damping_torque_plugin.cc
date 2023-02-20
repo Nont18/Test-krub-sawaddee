@@ -4,6 +4,7 @@
 #include <gazebo/common/common.hh>
 #include <ignition/math/Vector3.hh>
 #include <gazebo/transport/transport.hh>
+#include <yaw_damping_torque.hh>
 namespace gazebo
 {
   class YawDampingTorquePlugin : public ModelPlugin //This plugin named YawDampingTorquePlugin
@@ -13,7 +14,11 @@ namespace gazebo
       // Store the pointer to the model
       this->model = _parent;
       if(_sdf->HasElement("link_name"){
-      	this->damping_coef = _sdf->GetElement("link_name");
+      	this->link_name = _sdf->GetElement("link_name")->Get<std::string>();
+    	this->link = model->GetLink("link_name");
+      }
+      if(_sdf->HasElement("damping_coef")){
+      	this->damping_coef=_sdf->Get<double>("damping_coef");
       }
       // Listen to the update event. This event is broadcast every
       // simulation iteration.
@@ -28,21 +33,10 @@ namespace gazebo
       world_frame = model->WorldAngularVel(); //WorldAngularVel() is function.
       phi_dot = (-1)*world_frame.Z(); //get the member of z in world_frame matrix.
       this->torque = damping_coef*phi_dot*abs(phi_dot); //calculate torque
-      this->link->AddRelativeTorque(ignition::math::Vector3d(0,0,torque)); //change model to link
+      this->link->AddRelativeTorque(ignition::math::Vector3d(0,0,(-1)*torque)); //change to original axis.
 
     }
 
-    // Pointer to the model
-    private:
-    	physics::ModelPtr model;
-    	physics::linkPtr link;
-	double damping_coef;
-	double world_frame;
-	double phi_dot;
-	double torque;
-
-    // Pointer to the update event connection
-    private: event::ConnectionPtr updateConnection;
   };
 
   // Register this plugin with the simulator
